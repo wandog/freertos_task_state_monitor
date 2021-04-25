@@ -24,7 +24,7 @@
 #ifndef _MMC_SD_H__
 #include "main.h"
 #endif
-
+#include "string.h"
 #include "main.h"
 #include "FreeRTOS.h"
 
@@ -127,6 +127,24 @@ PUTCHAR_PROTOTYPE
   return ch;
 }
 
+
+
+void SD_RdWrTest(void)
+{
+    int i = 0;
+    static uint8_t bufr[SD_SECTOR_SIZE];
+    static uint8_t bufw[SD_SECTOR_SIZE];
+
+    for(i = 0; i < sizeof(bufw); i++)
+    {
+        bufr[i] = 0;
+        bufw[i] = i % 0xFF;
+    }
+
+    SD_WriteDisk(bufw, 1, 1);
+    SD_ReadDisk(bufr, 1, 1);
+    printf("# SD Card Read & Write Test %s!\r\n", memcmp(bufr, bufw, sizeof(bufr)) == 0 ? "Successfully" : "Failed");
+}
 /* USER CODE END 0 */
 
 /**
@@ -136,7 +154,7 @@ PUTCHAR_PROTOTYPE
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	uint64_t CardSize = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -159,7 +177,7 @@ int main(void)
   	MX_GPIO_Init();
   	MX_SPI1_Init();
   	MX_UART4_Init();
-  	initMEMS();
+//  	initMEMS();
   /* USER CODE BEGIN 2 */
 //  	uint8_t test;
   	while(SD_Initialize() != 0)
@@ -169,15 +187,28 @@ int main(void)
 		printf("## [Warining]: sd card not found !\r\n");
 	}
 
-  	    // 获取SD卡扇区数
-//  	    CardSize = SD_GetSectorCount();
-//
-//  	    // 字节转为兆
-//  	    CardSize = CardSize * SD_SECTOR_SIZE / 1024 / 1024;
-//
-//  	    // 打印信息
-//  	    printf("# SD Card Type:0x%02X\r\n", SD_Type);
-//  	    printf("# SD Card Size:%lldMB\r\n", CardSize);
+//	 获取SD卡扇区数
+
+//  	while(1){
+  		CardSize = SD_GetSectorCount();
+
+		// 字节转为兆
+		CardSize = CardSize * SD_SECTOR_SIZE / 1024 / 1024;
+
+		// 打印信息
+		printf("# SD Card Type:0x%02X\r\n", SD_Type);
+		printf("# SD Card Size:%luMB\r\n", (uint32_t)CardSize);
+		HAL_Delay(1000);
+//  	}
+
+  	SD_RdWrTest();
+
+	while(1)
+	{
+		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);			// 黄灯
+		HAL_Delay(1000);
+	}
+
 
 
 //	xSemaphore = xSemaphoreCreateBinary();
@@ -337,7 +368,7 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12|GPIO_PIN_13|GPIO_PIN_14, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : PE3 */
-  GPIO_InitStruct.Pin = GPIO_PIN_3;
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

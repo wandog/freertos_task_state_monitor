@@ -14,5 +14,5 @@ mmc_sd.c:199:9:SD_GetCSD	24	static
 mmc_sd.c:215:10:SD_GetSectorCount	32	static
 mmc_sd.c:239:9:SD_Idle_Sta	16	static
 mmc_sd.c:262:9:SD_Initialize	32	static
-mmc_sd.c:342:9:SD_ReadDisk	32	static
-mmc_sd.c:376:9:SD_WriteDisk	32	static
+mmc_sd.c:343:9:SD_ReadDisk	32	static
+mmc_sd.c:377:9:SD_WriteDisk	32	static

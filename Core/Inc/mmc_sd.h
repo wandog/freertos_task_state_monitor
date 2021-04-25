@@ -49,8 +49,8 @@
 #define MSD_RESPONSE_FAILURE       0xFF
 
 // SD卡片选引脚控制，使用STM32CUBEMX配置SD卡片选引脚为输出模式并设置为高电平
-#define SD_CS_H()		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3, GPIO_PIN_SET)
-#define SD_CS_L()		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3, GPIO_PIN_RESET)
+#define SD_CS_H()		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_4, GPIO_PIN_SET)
+#define SD_CS_L()		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_4, GPIO_PIN_RESET)
 
 extern uint8_t  SD_Type;			//SD卡的类型
 

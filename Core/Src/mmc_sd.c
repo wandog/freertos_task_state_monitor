@@ -268,6 +268,7 @@ uint8_t SD_Initialize(void)
 
     SD_SPI_Init();		//初始化IO
 	//for(i=0;i<0xf00;i++);//纯延时，等待SD卡上电完成
+//    SD_Select();
     for (i = 0; i < 10; i++)SD_SPI_ReadWriteByte(0XFF); //发送最少74个脉冲
     retry = 20;
     do

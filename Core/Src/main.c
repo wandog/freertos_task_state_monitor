@@ -16,9 +16,15 @@
   *
   ******************************************************************************
   */
+
+#include "mmc_sd.h"
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-//#include "main.h"
+
+#ifndef _MMC_SD_H__
+#include "main.h"
+#endif
+
 #include "main.h"
 #include "FreeRTOS.h"
 
@@ -73,9 +79,7 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-SPI_HandleTypeDef hspi1;
 
-UART_HandleTypeDef huart4;
 
 /* USER CODE BEGIN PV */
 
@@ -84,7 +88,7 @@ UART_HandleTypeDef huart4;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
-static void MX_SPI1_Init(void);
+
 static void MX_UART4_Init(void);
 void initMEMS(void);
 void Task1( void *pvParameters );
@@ -157,27 +161,44 @@ int main(void)
   	MX_UART4_Init();
   	initMEMS();
   /* USER CODE BEGIN 2 */
+//  	uint8_t test;
+  	while(SD_Initialize() != 0)
+	{
+  		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_14);			// 红灯
+		HAL_Delay(1000);
+		printf("## [Warining]: sd card not found !\r\n");
+	}
+
+  	    // 获取SD卡扇区数
+//  	    CardSize = SD_GetSectorCount();
+//
+//  	    // 字节转为兆
+//  	    CardSize = CardSize * SD_SECTOR_SIZE / 1024 / 1024;
+//
+//  	    // 打印信息
+//  	    printf("# SD Card Type:0x%02X\r\n", SD_Type);
+//  	    printf("# SD Card Size:%lldMB\r\n", CardSize);
 
 
-
-
-	xSemaphore = xSemaphoreCreateBinary();
+//	xSemaphore = xSemaphoreCreateBinary();
 //	xTaskCreate(Task1,"task1",130,NULL,1,NULL);
 //	xTaskCreate(Task2,"task2",130,NULL,2,NULL);
 //	xTaskCreate(Task2,"task1",128,NULL,1,NULL);
-	xTaskCreate(Task3,"task3",130,NULL,2,NULL);
-	xTaskCreate(Task4,"task4_gg",130,NULL,1,NULL);
-	xTaskCreate(Task5,"task5_kk",130,NULL,1,NULL);
+//	xTaskCreate(Task3,"task3",130,NULL,2,NULL);
+//	xTaskCreate(Task4,"task4_gg",130,NULL,1,NULL);
+//	xTaskCreate(Task5,"task5_kk",130,NULL,1,NULL);
 //	gg=xQueueCreate(1,1);
-	vTaskStartScheduler();
+//	vTaskStartScheduler();
 	/* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+
+
   while (1)
   {
-
+//	  printf("hello\n\r");
 //    /* USER CODE END WHILE */
 //
 //    /* USER CODE BEGIN 3 */
@@ -229,7 +250,7 @@ void SystemClock_Config(void)
   * @param None
   * @retval None
   */
-static void MX_SPI1_Init(void)
+void MX_SPI1_Init(void)
 {
 
   /* USER CODE BEGIN SPI1_Init 0 */
@@ -574,6 +595,16 @@ void Error_Handler(void)
   }
   /* USER CODE END Error_Handler_Debug */
 }
+
+
+
+
+
+
+
+
+
+
 
 #ifdef  USE_FULL_ASSERT
 /**

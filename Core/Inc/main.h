@@ -32,7 +32,10 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+void MX_SPI1_Init(void);
+SPI_HandleTypeDef hspi1;
 
+UART_HandleTypeDef huart4;
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

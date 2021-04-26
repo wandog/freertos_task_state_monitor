@@ -21,38 +21,43 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 
-#ifndef _MMC_SD_H__
-#include "main.h"
-#endif
-#include "string.h"
-#include "main.h"
+//#ifndef _MMC_SD_H__
+//#include "main.h"
+//#endif
+//#ifndef INC_PRINTF_H_
+//#include "printf.h"
+//#endif
+#include "fatfs.h"
+#include "fops.h"
+#include <string.h>
+//#include "main.h"
 #include "FreeRTOS.h"
 
 #include "queue.h"
 #include "semphr.h"
-#define LIS3DSH_WHO_AM_I_ADDR                0x0F
-#define LIS3DSH_CTRL_REG4_ADDR               0x20
-#define LIS3DSH_CTRL_REG1_ADDR               0x21
-#define LIS3DSH_CTRL_REG2_ADDR               0x22
-#define LIS3DSH_CTRL_REG3_ADDR               0x23
-#define LIS3DSH_CTRL_REG5_ADDR               0x24
-#define LIS3DSH_CTRL_REG6_ADDR               0x25
-
-#define LIS3DSH_STATUS_ADDR                  0x27
-
-#define LIS3DSH_OUT_X_L_ADDR                 0x28
-#define LIS3DSH_OUT_X_H_ADDR                 0x29
-#define LIS3DSH_OUT_Y_L_ADDR                 0x2A
-#define LIS3DSH_OUT_Y_H_ADDR                 0x2B
-#define LIS3DSH_OUT_Z_L_ADDR                 0x2C
-#define LIS3DSH_OUT_Z_H_ADDR                 0x2D
-
-#define LIS3DSH_ST1_1_ADDR                   0x40
-#define LIS3DSH_ST1_2_ADDR                   0x41
-#define LIS3DSH_THRS1_1_ADDR                 0x57
-#define LIS3DSH_MASK1_B_ADDR                 0x59
-#define LIS3DSH_MASK1_A_ADDR                 0x5A
-#define LIS3DSH_SETT1_ADDR                   0x5B
+//#define LIS3DSH_WHO_AM_I_ADDR                0x0F
+//#define LIS3DSH_CTRL_REG4_ADDR               0x20
+//#define LIS3DSH_CTRL_REG1_ADDR               0x21
+//#define LIS3DSH_CTRL_REG2_ADDR               0x22
+//#define LIS3DSH_CTRL_REG3_ADDR               0x23
+//#define LIS3DSH_CTRL_REG5_ADDR               0x24
+//#define LIS3DSH_CTRL_REG6_ADDR               0x25
+//
+//#define LIS3DSH_STATUS_ADDR                  0x27
+//
+//#define LIS3DSH_OUT_X_L_ADDR                 0x28
+//#define LIS3DSH_OUT_X_H_ADDR                 0x29
+//#define LIS3DSH_OUT_Y_L_ADDR                 0x2A
+//#define LIS3DSH_OUT_Y_H_ADDR                 0x2B
+//#define LIS3DSH_OUT_Z_L_ADDR                 0x2C
+//#define LIS3DSH_OUT_Z_H_ADDR                 0x2D
+//
+//#define LIS3DSH_ST1_1_ADDR                   0x40
+//#define LIS3DSH_ST1_2_ADDR                   0x41
+//#define LIS3DSH_THRS1_1_ADDR                 0x57
+//#define LIS3DSH_MASK1_B_ADDR                 0x59
+//#define LIS3DSH_MASK1_A_ADDR                 0x5A
+//#define LIS3DSH_SETT1_ADDR                   0x5B
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -106,26 +111,7 @@ uint8_t flag=pdTRUE;
 //UART_HandleTypeDef UartHandle;
 
 /* Private function prototypes -----------------------------------------------*/
-#ifdef __GNUC__
-/* With GCC, small printf (option LD Linker->Libraries->Small printf
-   set to 'Yes') calls __io_putchar() */
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif /* __GNUC__ */
-/**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-PUTCHAR_PROTOTYPE
-{
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART1 and Loop until the end of transmission */
-  HAL_UART_Transmit(&huart4, (uint8_t *)&ch, 1, 0xFFFF);
 
-  return ch;
-}
 
 
 
@@ -202,6 +188,25 @@ int main(void)
 //  	}
 
   	SD_RdWrTest();
+
+//	while(1)
+//	{
+//		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);			// 黄灯
+//		HAL_Delay(1000);
+//	}
+
+	printf("\r\n\r\n####################### HAL Libary SD Card SPI FATFS Demo ################################\r\n");
+	MX_FATFS_Init();
+	exf_mount();
+	exf_getfree();
+	FATFS_RdWrTest();
+	f_mkdir("gg");
+	if(exf_open("/gg/gg.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ) != 0)
+	{
+		printf("##[Error]: open %s failed!\r\n", "/gg/gg.txt");
+		return;
+	}
+	exf_close();
 
 	while(1)
 	{
@@ -450,31 +455,31 @@ void Task5( void *pvParameters ){
 void Task2( void *pvParameters ){
 
 	for(;;){
-		xSemaphoreTake(xSemaphore, portMAX_DELAY);
-		flag=pdFALSE;
-		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_RESET);
-
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		flag=pdTRUE;
+//		xSemaphoreTake(xSemaphore, portMAX_DELAY);
+//		flag=pdFALSE;
+//		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_RESET);
+//
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
+//		HAL_Delay(1000);
+//		flag=pdTRUE;
 //
 	}
 
@@ -489,79 +494,79 @@ int fputc(int ch, FILE *f)
 
 
 void initMEMS(void){
-	uint8_t data[1];
-	  	uint8_t ads[1];
-
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		data[0]=LIS3DSH_CTRL_REG1_ADDR;
-		HAL_SPI_Transmit(&hspi1,data,1,10);
-		ads[0]=0x01;
-		HAL_SPI_Transmit(&hspi1,ads,1,10);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
-
-
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		data[0]=LIS3DSH_CTRL_REG3_ADDR;
-		HAL_SPI_Transmit(&hspi1,data,1,10);
-		ads[0]=0x48;
-		HAL_SPI_Transmit(&hspi1,ads,1,10);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		data[0]=LIS3DSH_CTRL_REG4_ADDR;
-		HAL_SPI_Transmit(&hspi1,data,1,10);
-		ads[0]=0x67;
-		HAL_SPI_Transmit(&hspi1,ads,1,10);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
-
-	//	HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-	//	data[0]=0x24;
-	//	HAL_SPI_Transmit(&hspi1,data,1,10);
-	//	data[0]=0x00;
-	//	HAL_SPI_Transmit(&hspi1,data,1,10);
-	//	HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		data[0]=LIS3DSH_THRS1_1_ADDR;
-		ads[0]=0x55;
-		HAL_SPI_Transmit(&hspi1,data,1,10);
-		HAL_SPI_Transmit(&hspi1,ads,1,10);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		data[0]=LIS3DSH_ST1_1_ADDR;
-		ads[0]=0x05;
-		HAL_SPI_Transmit(&hspi1,data,1,10);
-		HAL_SPI_Transmit(&hspi1,ads,1,10);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		data[0]=LIS3DSH_ST1_2_ADDR;
-		ads[0]=0x11;
-		HAL_SPI_Transmit(&hspi1,data,1,10);
-		HAL_SPI_Transmit(&hspi1,ads,1,10);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		data[0]=LIS3DSH_MASK1_B_ADDR;
-		ads[0]=0xFC;
-		HAL_SPI_Transmit(&hspi1,data,1,10);
-		HAL_SPI_Transmit(&hspi1,ads,1,10);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		data[0]=LIS3DSH_MASK1_A_ADDR;
-		ads[0]=0xFC;
-		HAL_SPI_Transmit(&hspi1,data,1,10);
-		HAL_SPI_Transmit(&hspi1,ads,1,10);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
-
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		data[0]=LIS3DSH_SETT1_ADDR;
-		ads[0]=0x01;
-		HAL_SPI_Transmit(&hspi1,data,1,10);
-		HAL_SPI_Transmit(&hspi1,ads,1,10);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//	uint8_t data[1];
+//	  	uint8_t ads[1];
+//
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//		data[0]=LIS3DSH_CTRL_REG1_ADDR;
+//		HAL_SPI_Transmit(&hspi1,data,1,10);
+//		ads[0]=0x01;
+//		HAL_SPI_Transmit(&hspi1,ads,1,10);
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//
+//
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//		data[0]=LIS3DSH_CTRL_REG3_ADDR;
+//		HAL_SPI_Transmit(&hspi1,data,1,10);
+//		ads[0]=0x48;
+//		HAL_SPI_Transmit(&hspi1,ads,1,10);
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//		data[0]=LIS3DSH_CTRL_REG4_ADDR;
+//		HAL_SPI_Transmit(&hspi1,data,1,10);
+//		ads[0]=0x67;
+//		HAL_SPI_Transmit(&hspi1,ads,1,10);
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//
+//	//	HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//	//	data[0]=0x24;
+//	//	HAL_SPI_Transmit(&hspi1,data,1,10);
+//	//	data[0]=0x00;
+//	//	HAL_SPI_Transmit(&hspi1,data,1,10);
+//	//	HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//		data[0]=LIS3DSH_THRS1_1_ADDR;
+//		ads[0]=0x55;
+//		HAL_SPI_Transmit(&hspi1,data,1,10);
+//		HAL_SPI_Transmit(&hspi1,ads,1,10);
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//		data[0]=LIS3DSH_ST1_1_ADDR;
+//		ads[0]=0x05;
+//		HAL_SPI_Transmit(&hspi1,data,1,10);
+//		HAL_SPI_Transmit(&hspi1,ads,1,10);
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//		data[0]=LIS3DSH_ST1_2_ADDR;
+//		ads[0]=0x11;
+//		HAL_SPI_Transmit(&hspi1,data,1,10);
+//		HAL_SPI_Transmit(&hspi1,ads,1,10);
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//		data[0]=LIS3DSH_MASK1_B_ADDR;
+//		ads[0]=0xFC;
+//		HAL_SPI_Transmit(&hspi1,data,1,10);
+//		HAL_SPI_Transmit(&hspi1,ads,1,10);
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//		data[0]=LIS3DSH_MASK1_A_ADDR;
+//		ads[0]=0xFC;
+//		HAL_SPI_Transmit(&hspi1,data,1,10);
+//		HAL_SPI_Transmit(&hspi1,ads,1,10);
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
+//
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+//		data[0]=LIS3DSH_SETT1_ADDR;
+//		ads[0]=0x01;
+//		HAL_SPI_Transmit(&hspi1,data,1,10);
+//		HAL_SPI_Transmit(&hspi1,ads,1,10);
+//		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_SET);
 }
 
 

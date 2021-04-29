@@ -22,6 +22,10 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/mmc_sd.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h \
+ ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_spi.h \
@@ -43,7 +47,8 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/mmc_sd.h \
  /home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include/list.h \
  /home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include/semphr.h \
  /home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include/queue.h \
- /home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include/task.h
+ /home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include/task.h \
+ ../Core/Inc/main.h
 
 ../Core/Inc/mmc_sd.h:
 
@@ -94,6 +99,14 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/mmc_sd.h \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2c_ex.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s.h:
+
+../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_i2s_ex.h:
 
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h:
 
@@ -150,3 +163,5 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/mmc_sd.h \
 /home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include/queue.h:
 
 /home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include/task.h:
+
+../Core/Inc/main.h:

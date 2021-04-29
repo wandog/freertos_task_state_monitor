@@ -34,8 +34,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-//#include <stdio.h>
-//extern UART_HandleTypeDef huart4;
+
 /** @addtogroup STM32F4xx_HAL_Driver
   * @{
   */
@@ -600,19 +599,6 @@ void HAL_DisableMemorySwappingBank(void)
 /**
   * @}
   */
-
-//int fputc(int ch, FILE *f)
-//{
-//  HAL_UART_Transmit(&huart4, (uint8_t *)&ch, 1, 0xffff);
-//  return ch;
-//}
- 
-//int fgetc(FILE *f)
-//{
-//  uint8_t ch = 0;
-//  HAL_UART_Receive(&huart4, &ch, 1, 0xffff);
-//  return ch;
-//}
 
 /**
   * @}

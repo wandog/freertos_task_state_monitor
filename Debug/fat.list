@@ -8671,11 +8671,11 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
  8003e80:	2300      	movs	r3, #0
  8003e82:	627b      	str	r3, [r7, #36]	; 0x24
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
- 8003e84:	f44f 53a0 	mov.w	r3, #5120	; 0x1400
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV8;
+ 8003e84:	f44f 53c0 	mov.w	r3, #6144	; 0x1800
  8003e88:	62bb      	str	r3, [r7, #40]	; 0x28
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
- 8003e8a:	f44f 5380 	mov.w	r3, #4096	; 0x1000
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV8;
+ 8003e8a:	f44f 53c0 	mov.w	r3, #6144	; 0x1800
  8003e8e:	62fb      	str	r3, [r7, #44]	; 0x2c
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)

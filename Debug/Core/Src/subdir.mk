@@ -4,6 +4,10 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Core/Src/AUDIO.c \
+../Core/Src/AUDIO_LINK.c \
+../Core/Src/File_Handling.c \
+../Core/Src/cs43l22.c \
 ../Core/Src/diskio.c \
 ../Core/Src/fatfs.c \
 ../Core/Src/ff.c \
@@ -17,9 +21,14 @@ C_SRCS += \
 ../Core/Src/syscalls.c \
 ../Core/Src/sysmem.c \
 ../Core/Src/system_stm32f4xx.c \
-../Core/Src/user_diskio.c 
+../Core/Src/user_diskio.c \
+../Core/Src/waveplayer.c 
 
 OBJS += \
+./Core/Src/AUDIO.o \
+./Core/Src/AUDIO_LINK.o \
+./Core/Src/File_Handling.o \
+./Core/Src/cs43l22.o \
 ./Core/Src/diskio.o \
 ./Core/Src/fatfs.o \
 ./Core/Src/ff.o \
@@ -33,9 +42,14 @@ OBJS += \
 ./Core/Src/syscalls.o \
 ./Core/Src/sysmem.o \
 ./Core/Src/system_stm32f4xx.o \
-./Core/Src/user_diskio.o 
+./Core/Src/user_diskio.o \
+./Core/Src/waveplayer.o 
 
 C_DEPS += \
+./Core/Src/AUDIO.d \
+./Core/Src/AUDIO_LINK.d \
+./Core/Src/File_Handling.d \
+./Core/Src/cs43l22.d \
 ./Core/Src/diskio.d \
 ./Core/Src/fatfs.d \
 ./Core/Src/ff.d \
@@ -49,10 +63,19 @@ C_DEPS += \
 ./Core/Src/syscalls.d \
 ./Core/Src/sysmem.d \
 ./Core/Src/system_stm32f4xx.d \
-./Core/Src/user_diskio.d 
+./Core/Src/user_diskio.d \
+./Core/Src/waveplayer.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes
+Core/Src/AUDIO.o: ../Core/Src/AUDIO.c
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include" -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/portable/ARM_CM4F" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/AUDIO.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Core/Src/AUDIO_LINK.o: ../Core/Src/AUDIO_LINK.c
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include" -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/portable/ARM_CM4F" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/AUDIO_LINK.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Core/Src/File_Handling.o: ../Core/Src/File_Handling.c
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include" -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/portable/ARM_CM4F" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/File_Handling.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Core/Src/cs43l22.o: ../Core/Src/cs43l22.c
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include" -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/portable/ARM_CM4F" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/cs43l22.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Core/Src/diskio.o: ../Core/Src/diskio.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include" -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/portable/ARM_CM4F" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/diskio.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Core/Src/fatfs.o: ../Core/Src/fatfs.c
@@ -81,4 +104,6 @@ Core/Src/system_stm32f4xx.o: ../Core/Src/system_stm32f4xx.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include" -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/portable/ARM_CM4F" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/system_stm32f4xx.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Core/Src/user_diskio.o: ../Core/Src/user_diskio.c
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include" -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/portable/ARM_CM4F" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/user_diskio.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Core/Src/waveplayer.o: ../Core/Src/waveplayer.c
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DUSE_HAL_DRIVER -DDEBUG -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/include" -I"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/FreeRTOS/portable/ARM_CM4F" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/waveplayer.d" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 

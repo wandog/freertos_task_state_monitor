@@ -27,6 +27,8 @@
 #include "queue.h"
 #include "semphr.h"
 #include "task.h"
+#include "File_Handling.h"
+#include "waveplayer.h"
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -78,8 +80,11 @@ static void MX_UART4_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2S3_Init(void);
 /* USER CODE BEGIN PFP */
+//extern ApplicationTypeDef Appli_state;
+extern AUDIO_PLAYBACK_StateTypeDef AudioState;
 SemaphoreHandle_t xSemaphore;
 uint8_t flag=pdTRUE;
+uint8_t isFinished=0;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -178,17 +183,33 @@ int main(void)
 	exf_mount();
 	exf_getfree();
 	FATFS_RdWrTest();
-	f_mkdir("gg");
-	if(exf_open("/gg/gg.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ) != 0)
-	{
-		printf("##[Error]: open %s failed!\r\n", "/gg/gg.txt");
-		return;
-	}
-	exf_close();
-
+//	f_mkdir("gg");
+//	if(exf_open("/gg/gg.txt", FA_OPEN_ALWAYS | FA_WRITE | FA_READ) != 0)
+//	{
+//		printf("##[Error]: open %s failed!\r\n", "/gg/gg.txt");
+//		return;
+//	}
+//	exf_close();
+	uint8_t count=0;
 	while(1)
-	{
+	{	if(count==5){
+			break;
+		}
 		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);			// 黄灯
+		HAL_Delay(1000);
+		count++;
+	}
+	while(1){
+		AUDIO_PLAYER_Start(0);
+		while(!isFinished){
+			AUDIO_PLAYER_Process(pdTRUE);
+			if(AudioState==AUDIO_STATE_STOP){
+				isFinished=1;
+			}
+
+
+		}
+		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_13);			// 黄灯
 		HAL_Delay(1000);
 	}
 

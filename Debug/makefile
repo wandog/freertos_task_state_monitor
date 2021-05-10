@@ -31,34 +31,34 @@ endif
 
 -include ../makefile.defs
 
-BUILD_ARTIFACT_NAME := fat
+BUILD_ARTIFACT_NAME := lab4
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-fat.elf \
+lab4.elf \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-fat.list \
+lab4.list \
 
 OBJCOPY_BIN += \
-fat.bin \
+lab4.bin \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: fat.elf secondary-outputs
+main-build: lab4.elf secondary-outputs
 
 # Tool invocations
-fat.elf: $(OBJS) $(USER_OBJS) /home/wandog/STM32CubeIDE/workspace_1.5.1/fat/STM32F407VGTX_FLASH.ld
-	arm-none-eabi-gcc -o "fat.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/wandog/STM32CubeIDE/workspace_1.5.1/fat/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="fat.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+lab4.elf: $(OBJS) $(USER_OBJS) /home/wandog/STM32CubeIDE/workspace_1.5.1/lab4/STM32F407VGTX_FLASH.ld
+	arm-none-eabi-gcc -o "lab4.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/home/wandog/STM32CubeIDE/workspace_1.5.1/lab4/STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="lab4.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -67,13 +67,13 @@ default.size.stdout: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-fat.list: $(EXECUTABLES)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "fat.list"
+lab4.list: $(EXECUTABLES)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "lab4.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-fat.bin: $(EXECUTABLES)
-	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "fat.bin"
+lab4.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "lab4.bin"
 	@echo 'Finished building: $@'
 	@echo ' '
 

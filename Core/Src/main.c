@@ -87,11 +87,12 @@ static void MX_GPIO_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_UART4_Init(void);
 void initMEMS(void);
-void Task1( void *pvParameters );
-void Task2( void *pvParameters );
-void Task3( void *pvParameters );
-void Task4( void *pvParameters );
-void Task5( void *pvParameters );
+void RedLEDTask(void const * argument);
+void GreenLEDTask(void const * argument);
+void Task1(void const * argument);
+void Task2(void const * argument);
+void Task3(void const * argument);
+void PrintTask(void);
 /* USER CODE BEGIN PFP */
 SemaphoreHandle_t xSemaphore;
 uint8_t flag=pdTRUE;
@@ -145,7 +146,7 @@ int main(void)
   /* USER CODE END Init */
 
   /* Configure the system clock */
-  SystemClock_Config();
+	SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
 
@@ -158,16 +159,15 @@ int main(void)
   	initMEMS();
   /* USER CODE BEGIN 2 */
 
+  	printf("**********************************\n\r");
 
 
-
-	xSemaphore = xSemaphoreCreateBinary();
-//	xTaskCreate(Task1,"task1",130,NULL,1,NULL);
-//	xTaskCreate(Task2,"task2",130,NULL,2,NULL);
-//	xTaskCreate(Task2,"task1",128,NULL,1,NULL);
-	xTaskCreate(Task3,"task3",130,NULL,2,NULL);
-	xTaskCreate(Task4,"task4_gg",130,NULL,1,NULL);
-	xTaskCreate(Task5,"task5_kk",130,NULL,1,NULL);
+  	xTaskCreate(RedLEDTask,"RedLEDTask",100,NULL,0,NULL);
+	xTaskCreate(Task1,"Task1",50,NULL,0,NULL);
+	xTaskCreate(Task2,"Task2",30,NULL,0,NULL);
+	xTaskCreate(GreenLEDTask,"GreenLEDTask",130,NULL,0,NULL);
+	xTaskCreate(Task3,"Task3",40,NULL,0,NULL);
+	xTaskCreate(PrintTask,"PrintTask",130,NULL,0,NULL);
 //	gg=xQueueCreate(1,1);
 	vTaskStartScheduler();
 	/* USER CODE END 2 */
@@ -175,13 +175,13 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  while (1)
-  {
+	while (1)
+	{
 
-//    /* USER CODE END WHILE */
-//
-//    /* USER CODE BEGIN 3 */
-  }
+	//    /* USER CODE END WHILE */
+	//
+	//    /* USER CODE BEGIN 3 */
+	}
   /* USER CODE END 3 */
 }
 
@@ -342,98 +342,58 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void Task1( void *pvParameters ){
-	for(;;){
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_12);
-
-		vTaskDelay(100);
-	}
-
-
-}
-
-void Task3( void *pvParameters ){
-	for(;;){
-//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_12);
-
-//		uint8_t a[3]="hh";
-//		printf("test %d\n\r",1);
-		showTask();
-//		HAL_UART_Transmit(&huart4, a, sizeof(a), 0xffff);
-		vTaskDelay(3500);
-	}
-
-
-}
-
-
-void Task4( void *pvParameters ){
-	for(;;){
-//		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_12);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_14);
-//		uint8_t a[3]="hh";
-//		printf("test %d\n\r",1);
-//		showTask();
-//		HAL_UART_Transmit(&huart4, a, sizeof(a), 0xffff);
-//		vTaskDelay(1000);
-		HAL_Delay(1000);
-	}
-
-
-}
-
-void Task5( void *pvParameters ){
-	for(;;){
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_12);
-
-//		uint8_t a[3]="hh";
-//		printf("test %d\n\r",1);
-//		showTask();
-//		HAL_UART_Transmit(&huart4, a, sizeof(a), 0xffff);
-//		vTaskDelay(2000);
-		HAL_Delay(2000);
-	}
-}
-
-void Task2( void *pvParameters ){
-
-	for(;;){
-		xSemaphoreTake(xSemaphore, portMAX_DELAY);
-		flag=pdFALSE;
-		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_RESET);
-
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		HAL_GPIO_TogglePin(GPIOD,GPIO_PIN_13);
-		HAL_Delay(1000);
-		flag=pdTRUE;
-//
-	}
-
-
-}
-
-int fputc(int ch, FILE *f)
+void RedLEDTask(void const * argument)
 {
-  HAL_UART_Transmit(&huart4, (uint8_t *)&ch, 1, 2);
-  return ch;
+	for(;;)
+	{
+		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+		vTaskDelay(500);
+	}
 }
+void GreenLEDTask(void const * argument)
+{
+	for(;;)
+	{
+		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_12);
+		vTaskDelay(1000);
+	}
+}
+void Task1(void const * argument)
+{
+	for(;;)
+	{
+		vTaskDelete( NULL );
+	}
+}
+void Task2(void const * argument)
+{
+	for(;;)
+	{
+		vTaskDelete( NULL );
+	}
+}
+
+void Task3(void const * argument)
+{
+	for(;;)
+	{
+		vTaskDelete( NULL );
+	}
+}
+
+void PrintTask(void){
+	for(;;)
+	{
+		vPrintFreeList();
+		vTaskDelay(3000);
+	}
+}
+
+//int fputc(int ch, FILE *f)
+//{
+//  HAL_UART_Transmit(&huart4, (uint8_t *)&ch, 1, 2);
+//  return ch;
+//}
 
 
 void initMEMS(void){

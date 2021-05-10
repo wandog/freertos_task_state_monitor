@@ -771,6 +771,9 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 	{
 	TCB_t *pxNewTCB;
 	BaseType_t xReturn;
+	char name[20];
+	strcpy(name,pcName);
+	printf("%s\n\r",name);
 
 		/* If the stack grows down then allocate the stack then the TCB so the stack
 		does not grow into the TCB.  Likewise if the stack grows up then allocate
